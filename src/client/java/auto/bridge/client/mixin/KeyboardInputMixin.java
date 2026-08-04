@@ -18,12 +18,17 @@ public class KeyboardInputMixin {
 		Input keyPresses = inputAccessor.autoBridge$getKeyPresses();
 		if (NoobBridgeController.isActive()) {
 			AutoBridgeClient.cancelCentering();
-			applyAutomaticInput(inputAccessor, keyPresses, NoobBridgeController.getMovementInput(keyPresses.forward()),
+			applyAutomaticInput(inputAccessor, keyPresses, NoobBridgeController.getMovementInput(keyPresses.forward(), keyPresses.backward()),
 				NoobBridgeController.shouldSneak());
 			return;
 		}
 
-		if (keyPresses.forward() || keyPresses.backward() || keyPresses.left() || keyPresses.right()) {
+		// Manual movement normally means the player has taken over.  A build-mode key press
+		// made while already walking is the exception: the alignment and centering it starts
+		// must not be cancelled by the very keys the player is still holding, and the strafe
+		// it injects replaces them until the block is lined up.
+		if (!AutoBridgeClient.isPreparingBuildMode()
+			&& (keyPresses.forward() || keyPresses.backward() || keyPresses.left() || keyPresses.right())) {
 			AutoBridgeClient.cancelCentering();
 			return;
 		}

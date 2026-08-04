@@ -1,5 +1,16 @@
 {
   "key.categories.auto-bridge.general": "Auto-bridge",
-  "key.auto-bridge.align_yaw": "Align camera and center player",
-  "key.auto-bridge.toggle_build_mode": "Toggle Noob bridge mode"
+  "key.auto-bridge.toggle_build_mode": "Toggle Noob bridge mode (align and center)",
+  "key.auto-bridge.open_settings": "Open Auto-bridge settings",
+  "screen.auto-bridge.settings.title": "Auto-bridge settings",
+  "screen.auto-bridge.smooth_camera": "Smooth camera: %s",
+  "screen.auto-bridge.smooth_duration": "Seconds (0–5)",
+  "screen.auto-bridge.imprecision": "Imprecision: %s",
+  "screen.auto-bridge.imprecision_chance": "Imprecision chance: %s",
+  "screen.auto-bridge.freakin_robot": "FREAKIN ROBOT",
+  "screen.auto-bridge.random": "RANDOM",
+  "tooltip.auto-bridge.smooth_camera": "Moves the camera to its target the way a hand moves a mouse instead of instantly.",
+  "tooltip.auto-bridge.smooth_duration": "Time in seconds for a wide camera turn; shorter turns take proportionally less. Only numbers from 0 to 5 are allowed.",
+  "tooltip.auto-bridge.imprecision": "Adds an occasional human-like offset to camera alignment and block centering, and makes the smooth camera speed up and slow down unevenly. RANDOM chooses 12–25% for each action.",
+  "tooltip.auto-bridge.imprecision_chance": "How often the selected imprecision is used when the mod needs precision."
 }
