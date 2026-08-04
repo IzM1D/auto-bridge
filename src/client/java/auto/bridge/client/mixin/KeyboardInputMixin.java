@@ -1,7 +1,8 @@
 package auto.bridge.client.mixin;
 
 import auto.bridge.client.AutoBridgeClient;
-import auto.bridge.client.NoobBridgeController;
+import auto.bridge.client.build.BuildModeManager;
+import auto.bridge.client.build.MovementInput;
 import net.minecraft.client.player.KeyboardInput;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.phys.Vec2;
@@ -16,10 +17,11 @@ public class KeyboardInputMixin {
 	private void autoBridge$applyCenteringInput(CallbackInfo info) {
 		ClientInputAccessor inputAccessor = (ClientInputAccessor) this;
 		Input keyPresses = inputAccessor.autoBridge$getKeyPresses();
-		if (NoobBridgeController.isActive()) {
+		if (BuildModeManager.isActive()) {
 			AutoBridgeClient.cancelCentering();
-			applyAutomaticInput(inputAccessor, keyPresses, NoobBridgeController.getMovementInput(keyPresses.forward(), keyPresses.backward()),
-				NoobBridgeController.shouldSneak());
+			applyAutomaticInput(inputAccessor, keyPresses,
+				BuildModeManager.movementInput(keyPresses.forward(), keyPresses.backward()),
+				BuildModeManager.shouldSneak());
 			return;
 		}
 
@@ -33,8 +35,8 @@ public class KeyboardInputMixin {
 			return;
 		}
 
-		AutoBridgeClient.AutomaticInput automaticInput = AutoBridgeClient.getAutomaticMovementInput();
-		if (automaticInput == AutoBridgeClient.AutomaticInput.NONE) {
+		MovementInput automaticInput = AutoBridgeClient.getAutomaticMovementInput();
+		if (automaticInput.isIdle()) {
 			return;
 		}
 
@@ -42,7 +44,7 @@ public class KeyboardInputMixin {
 	}
 
 	private static void applyAutomaticInput(ClientInputAccessor inputAccessor, Input originalInput,
-			AutoBridgeClient.AutomaticInput automaticInput, boolean sneak) {
+			MovementInput automaticInput, boolean sneak) {
 		Input keyPresses = new Input(
 			automaticInput.forward(),
 			automaticInput.backward(),

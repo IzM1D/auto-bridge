@@ -2,7 +2,7 @@ package auto.bridge.client.mixin;
 
 import auto.bridge.client.AutoBridgeClient;
 import auto.bridge.client.CameraMotion;
-import auto.bridge.client.NoobBridgeController;
+import auto.bridge.client.build.BuildModeManager;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.input.MouseButtonInfo;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,14 +16,14 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 public class MouseHandlerMixin {
 	@Inject(method = "onButton", at = @At("HEAD"), cancellable = true)
 	private void autoBridge$blockMouseButtons(long window, MouseButtonInfo button, int action, CallbackInfo info) {
-		if (NoobBridgeController.shouldLockMouse()) {
+		if (BuildModeManager.shouldLockMouse()) {
 			info.cancel();
 		}
 	}
 
 	@Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
 	private void autoBridge$blockHotbarScroll(long window, double horizontal, double vertical, CallbackInfo info) {
-		if (NoobBridgeController.isActive()) {
+		if (BuildModeManager.isActive()) {
 			info.cancel();
 		}
 	}
@@ -36,7 +36,7 @@ public class MouseHandlerMixin {
 		// The lock starts with the key press, not with the mode: the alignment that follows
 		// it would otherwise fight the mouse of a player who is still walking and looking
 		// around.  Vertical look stays free throughout.
-		if (NoobBridgeController.isActive() || AutoBridgeClient.isPreparingBuildMode()) {
+		if (BuildModeManager.isActive() || AutoBridgeClient.isPreparingBuildMode()) {
 			args.set(0, 0.0D);
 		}
 	}

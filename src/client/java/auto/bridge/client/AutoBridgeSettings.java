@@ -1,5 +1,6 @@
 package auto.bridge.client;
 
+import auto.bridge.client.build.BridgeModeType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,6 +17,7 @@ public final class AutoBridgeSettings {
 	private static final float MAX_YAW_OFFSET = 5.0F;
 	private static AutoBridgeSettings instance;
 
+	private BridgeModeType bridgeMode = BridgeModeType.defaultType();
 	private boolean smoothCamera;
 	private double smoothCameraSeconds = 0.35D;
 	private int imprecisionPercent;
@@ -30,6 +32,15 @@ public final class AutoBridgeSettings {
 			instance = load();
 		}
 		return instance;
+	}
+
+	/** The kind of building the build key starts. */
+	public BridgeModeType getBridgeMode() {
+		return bridgeMode;
+	}
+
+	public void setBridgeMode(BridgeModeType bridgeMode) {
+		this.bridgeMode = bridgeMode == null ? BridgeModeType.defaultType() : bridgeMode;
 	}
 
 	public boolean isSmoothCamera() {
@@ -97,6 +108,7 @@ public final class AutoBridgeSettings {
 
 	public void save() {
 		Properties properties = new Properties();
+		properties.setProperty("bridgeMode", bridgeMode.id());
 		properties.setProperty("smoothCamera", Boolean.toString(smoothCamera));
 		properties.setProperty("smoothCameraSeconds", Double.toString(smoothCameraSeconds));
 		properties.setProperty("imprecisionPercent", Integer.toString(imprecisionPercent));
@@ -124,6 +136,8 @@ public final class AutoBridgeSettings {
 		Properties properties = new Properties();
 		try (InputStream input = Files.newInputStream(path)) {
 			properties.load(input);
+			settings.setBridgeMode(BridgeModeType.byId(
+				properties.getProperty("bridgeMode", BridgeModeType.defaultType().id())));
 			settings.setSmoothCamera(Boolean.parseBoolean(properties.getProperty("smoothCamera", "false")));
 			settings.setSmoothCameraSeconds(parseDouble(properties, "smoothCameraSeconds", 0.35D));
 			settings.setImprecisionPercent(parseInt(properties, "imprecisionPercent", 0));
@@ -139,8 +153,12 @@ public final class AutoBridgeSettings {
 		return (ThreadLocalRandom.current().nextDouble() * 2.0D - 1.0D) * nextImprecisionStrength();
 	}
 
-	/** One roll of the imprecision setting, as a 0..1 fraction of its full range. */
-	private double nextImprecisionStrength() {
+	/**
+	 * One roll of the imprecision setting, as a 0..1 fraction of its full range.  Anything that
+	 * wants to be humanly uneven - a camera turn, the spacing between clicks - scales itself by
+	 * this, so the whole run is imprecise together or not at all.
+	 */
+	public double nextImprecisionStrength() {
 		if (imprecisionChancePercent == 0
 			|| ThreadLocalRandom.current().nextInt(100) >= imprecisionChancePercent) {
 			return 0.0D;

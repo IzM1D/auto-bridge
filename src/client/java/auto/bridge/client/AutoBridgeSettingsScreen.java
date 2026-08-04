@@ -30,15 +30,24 @@ public final class AutoBridgeSettingsScreen extends Screen {
 		titleWidget.setY(top - 30);
 		addRenderableWidget(titleWidget);
 
+		// The mode button steps through BridgeModeType, so a new kind of building appears here
+		// as soon as it is added to that enum.
+		Button modeButton = addRenderableWidget(Button.builder(modeMessage(), button -> {
+			settings.setBridgeMode(settings.getBridgeMode().next());
+			settings.save();
+			button.setMessage(modeMessage());
+		}).bounds(centerX - 140, top, 280, 20).build());
+		modeButton.setTooltip(Tooltip.create(Component.translatable("tooltip.auto-bridge.bridge_mode")));
+
 		smoothButton = addRenderableWidget(Button.builder(smoothMessage(), button -> {
 			settings.setSmoothCamera(!settings.isSmoothCamera());
 			settings.save();
 			refreshSmoothControls();
-		}).bounds(centerX - 140, top, 190, 20).build());
+		}).bounds(centerX - 140, top + 28, 190, 20).build());
 		smoothButton.setTooltip(Tooltip.create(Component.translatable("tooltip.auto-bridge.smooth_camera")));
 
 		lastValidDuration = durationText(settings.getSmoothCameraSeconds());
-		durationInput = new EditBox(font, centerX + 58, top, 82, 20,
+		durationInput = new EditBox(font, centerX + 58, top + 28, 82, 20,
 			Component.translatable("screen.auto-bridge.smooth_duration"));
 		durationInput.setMaxLength(4);
 		durationInput.setValue(lastValidDuration);
@@ -47,13 +56,13 @@ public final class AutoBridgeSettingsScreen extends Screen {
 		addRenderableWidget(durationInput);
 		refreshSmoothControls();
 
-		AccuracySlider accuracySlider = addRenderableWidget(new AccuracySlider(centerX - 140, top + 34));
+		AccuracySlider accuracySlider = addRenderableWidget(new AccuracySlider(centerX - 140, top + 62));
 		accuracySlider.setTooltip(Tooltip.create(Component.translatable("tooltip.auto-bridge.imprecision")));
-		ChanceSlider chanceSlider = addRenderableWidget(new ChanceSlider(centerX - 140, top + 62));
+		ChanceSlider chanceSlider = addRenderableWidget(new ChanceSlider(centerX - 140, top + 90));
 		chanceSlider.setTooltip(Tooltip.create(Component.translatable("tooltip.auto-bridge.imprecision_chance")));
 
 		addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> onClose())
-			.bounds(centerX - 100, top + 102, 200, 20).build());
+			.bounds(centerX - 100, top + 130, 200, 20).build());
 	}
 
 	@Override
@@ -70,6 +79,10 @@ public final class AutoBridgeSettingsScreen extends Screen {
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		extractTransparentBackground(graphics);
+	}
+
+	private Component modeMessage() {
+		return Component.translatable("screen.auto-bridge.bridge_mode", settings.getBridgeMode().displayName());
 	}
 
 	private Component smoothMessage() {
