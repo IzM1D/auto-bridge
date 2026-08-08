@@ -11,6 +11,7 @@
   "screen.auto-bridge.freakin_robot": "FREAKIN ROBOT",
   "screen.auto-bridge.random": "RANDOM",
   "bridge_mode.auto-bridge.noob_bridge": "Noob bridging",
+  "bridge_mode.auto-bridge.ninja_bridge": "Ninja bridging",
   "tooltip.auto-bridge.bridge_mode": "Which kind of bridging the build key starts. Each mode has its own stance, its own headings to build along and its own click pace.",
   "tooltip.auto-bridge.smooth_camera": "Moves the camera to its target the way a hand moves a mouse instead of instantly.",
   "tooltip.auto-bridge.smooth_duration": "Time in seconds for a wide camera turn; shorter turns take proportionally less. Only numbers from 0 to 5 are allowed.",
